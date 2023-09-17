@@ -3,20 +3,14 @@
 Extract contents from a Open Office sheet's columns and convert it to text in image arrays.
 Can rescale the input image with command line arguments. 
 
-Created by A.Gordillo-Guerrero (anto@unex.es), September , 2023.
-
-University of Extremadura. [Smart Open Lab](www.smartopenlab.com).
-
-Released into the public domain.
-
 ## Requires
 
 - Python 3
 
 - Libraries:
- - pyexcel: to read and write libre office and excel sheets
- - PIL: to modify and create images with texts
- - argparse: to read arguments from command line
+  - [pyexcel](http://docs.pyexcel.org/en/latest/): to read and write libre office and excel sheets
+  - [PIL](https://pypi.org/project/Pillow/): to modify and create images with texts
+  - [argparse](https://docs.python.org/3/library/argparse.html): to read arguments from command line
 
 ## Usage
 
@@ -54,9 +48,11 @@ Arguments:
 
 Example:
 
-`python3 ./from_ods_to_imagematrix_V5.py -ow 1000 -oh 800 -iw 43 -ih 43 -d datasheets/table_names_1.ods -i images/base_llavero_V0.1.png -f  fonts/Misyalli-dafont.ttf` -s 24
+`python3 ./from_ods_to_imagematrix_V5.py -ow 1000 -oh 800 -iw 43 -ih 43 -d datasheets/table_names_1.ods -i images/base_llavero_V0.1.png -f  fonts/Misyalli-dafont.ttf -s 24`
 
-Will generate an output image file with 1000x800mm, composed of a matrix of 43x43mm images with 24 point of letter size. Using:
+Will generate an output image file with 1000x800mm, composed of a matrix of 43x43mm images with 24 point of letter size.
+
+Using:
 
 - `images/base_llavero_V0.1.png`:. as input image.
 
@@ -65,6 +61,13 @@ Will generate an output image file with 1000x800mm, composed of a matrix of 43x4
 - `datasheets/table_names_1.ods`: as data input file.
 
 <p align="center">
-<img width="600" src="https://github.com/AGordiGuerrero/from_ods_to_imagematrix/blob/master/labelarray_ouput.jpg">
+<img width="800" src="https://github.com/AGordiGuerrero/from_ods_to_imagematrix/blob/master/labelarray_ouput.jpg">
 </p>
 
+----------------
+
+Created by A.Gordillo-Guerrero (anto@unex.es), September , 2023.
+
+[Smart Open Lab](www.smartopenlab.com). University of Extremadura. Spain.
+
+Released into the public domain.
