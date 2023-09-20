@@ -11,18 +11,28 @@
 
 #!/usr/bin/env python3
 
-text = 'This program read data from a Libre Office, open document, sheet and convert it to centered text, with a given font, in a matrix from a base image file.\n\nRun with -h option to see command line arguments.\n\n'
-
-print(text)
 
 # To use libre office and excel sheets
 import pyexcel
+from pyexcel._compact import OrderedDict
 
 # To modify and create images with texts
 from PIL import Image, ImageFont, ImageDraw
 
-#To read arguments from command line
+# To read arguments from command line
 import argparse
+
+# To make good logs with info instead of only print()
+import logging
+
+text = 'This program read data from a Libre Office, open document, sheet and convert it to centered text, with a given font, in a matrix from a base image file.\n\nRun with -h option to see command line arguments.\n\n'
+
+
+# Show info to user
+print(text)
+# Configuring the log file
+logging.basicConfig(filename='output.log', encoding='utf-8', level=logging.DEBUG)
+logging.info(text)
 
 
 ################################################
@@ -46,39 +56,42 @@ parser.add_argument("--fontsize", "-s", help="Truetype font size (pt)", type=int
 args = parser.parse_args()
 
 if args.outWidth:
-    print("Width in mm of the output image: %s mm" % args.outWidth)
+    print("Width in mm of the output image: %s mm", args.outWidth)
+    logging.info("Width in mm of the output image: %s mm", args.outWidth)
 if args.outHeight:
-    print("Height in mm of the output image: %s mm" % args.outHeight)
+    print("Height in mm of the output image: %s mm", args.outHeight)
+    logging.info("Height in mm of the input image: %s mm", args.outHeight)
 if args.inWidth:
-    print("Width in mm of rescaled base image: %s mm" % args.inWidth)
+    print("Width in mm of rescaled base image: %s mm", args.inWidth)
+    logging.info("Width in mm of rescaled base image: %s mm", args.inWidth)
 if args.inHeight:
-    print("Height in mm of the rescaled base image: %s mm" % args.inHeight)
+    print("Height in mm of the rescaled base image: %s mm", args.inHeight)
+    logging.info("Height in mm of the rescaled base image: %s mm", args.inHeight)
 if args.imagefile:
-    print("Input data sheet file name: %s" % args.datasheet)
+    print("Input data sheet file name: %s", args.datasheet)
+    logging.info("Input data sheet file name: %s", args.datasheet)
 if args.fontfile:
-    print("Input image file name: %s" % args.imagefile)
+    print("Input image file name: %s", args.imagefile)
+    logging.info("Input image file name: %s", args.imagefile)
 if args.fontfile:
-    print("Truetype font file name: %s" % args.fontfile)
+    print("Truetype font file name: %s", args.fontfile)
+    logging.info("Truetype font file name: %s", args.fontfile)
 if args.fontsize:
-    print("Truetype font size (pt): %s\n" % args.fontsize)
+    print("Truetype font size (pt): %s\n", args.fontsize)
+    logging.info("Truetype font size (pt): %s\n", args.fontsize)
 
     
 ################################################
 # Obtaining data from sheet's first column
 ################################################
 
-from pyexcel._compact import OrderedDict
-
 # Reading the table as an ordered dictionary
 my_dict = pyexcel.get_dict(file_name=args.datasheet, name_columns_by_row=0)
 
 # Some test...
-# Printing in command line the reades lines
-# for i in range (1, len(my_dict["Nombre"])):
-#    print(my_dict["Nombre"][i])
-  
-#print only the first column (names)
-#my_dict["Nombre"][0]
+# Printing in the log file the readed lines
+for i in range (1, len(my_dict["Nombre"])):
+    logging.debug(my_dict["Nombre"][i])
 
 
 
@@ -129,29 +142,32 @@ offset=4 #pixels
 
 #How many images can I put in a row with an offset?
 nImByRow=int(canvasPixwidth/(baseRescaledWidth+offset))
-#print("We can put %s images per row, rounding down" % nImByRow)
 #How many images can I put in a column with an offset?
 nImByCol=int(canvasPixheight/(baseRescaledHeight+offset))
 print ("With these sizes we can put", nImByRow, "images per row, and", nImByRow, "images per column, rounding down")
+logging.info("With these sizes we can put", nImByRow, "images per row, and", nImByRow, "images per column, rounding down")
 
-print("Making a total of %s possible elements in total,\n" % int(nImByCol*nImByRow))
+
+print("Making a total of %s possible elements in total,\n" , int(nImByCol*nImByRow))
+logging.info("Making a total of %s possible elements in total,\n" , int(nImByCol*nImByRow))
 print("Our data sheet has %s elements. \n" % len(my_dict["Nombre"]))
+logging.info("Our data sheet has %s elements. \n" , len(my_dict["Nombre"]))
 # Do we have enough room for the elements in the table?
 
 if (len(my_dict["Nombre"])>int(nImByCol*nImByRow)):
     print("We do not have enough room for all the table elements. Exiting...\n")
+    logging.error("We do not have enough room for all the table elements. Exiting...\n")
     exit()
 else:
     print("We have %s remaining positions in our canvas.\n" % int( int(nImByCol*nImByRow)- len(my_dict["Nombre"]) ) )
+    logging.info("We have %s remaining positions in our canvas.\n" % int( int(nImByCol*nImByRow)- len(my_dict["Nombre"]) ) )
 
 #Defining array of images    
 for i in range (len(my_dict["Nombre"])):
     #row identification
     irow= i % nImByRow
-#    print ("We are in row %s" % irow)
     #column identification
     icol= i // nImByRow
-#    print ("We are in column %s" % icol)
     # putting one base image in the correct location
     canvas.paste( imBaseResized, ( int( ( baseRescaledWidth + offset )*irow ) , int( ( baseRescaledHeight +offset) *icol ) ) ) 
     #putting the corresponding text in the center, depending on its size
@@ -162,12 +178,6 @@ for i in range (len(my_dict["Nombre"])):
     thisTextCenterY=int((baseRescaledHeight + offset)*icol+(baseRescaledHeight-textHeight)/2)
     draw.text((thisTextCenterX, thisTextCenterY), my_dict["Nombre"][i], font=TTfont,fill=(0,0,0,255) ) #fill letters in black
 
-#Some test...
-#canvas.text((100, 100), "Mi carro me lo robaron", font=TTfont)
-#Im.text((15,15*j), my_dict["Nombre"][j], (0,0,0), font=mf)
-#canvas.paste(imBaseWhiteBack, (int(0), int(0)))
-#canvas.paste(imBaseWhiteBack, (300, 300))
-
 # saving to .png to retain transparent background
 canvas.save('labelarray_ouput.png')
 
@@ -177,5 +187,6 @@ canvas=canvas.convert('RGB')
 canvas.save('labelarray_ouput.jpg')
 
 print("Array done, showing result after file save. Exiting...")
+logging.info("Array done, showing result after file save. Exiting...")
 
 canvas.show()

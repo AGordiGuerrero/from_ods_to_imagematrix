@@ -1,0 +1,4 @@
+#ignore temporal editions of files
+*~
+#ignore log files
+*.log

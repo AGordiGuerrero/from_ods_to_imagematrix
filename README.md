@@ -12,6 +12,10 @@ Can rescale the input image with command line arguments.
   - [PIL](https://pypi.org/project/Pillow/): to modify and create images with texts
   - [argparse](https://docs.python.org/3/library/argparse.html): to read arguments from command line
 
+Can all be installed in one step using:
+
+`pip install -r requirements.txt`
+
 ## Usage
 
 From command line:
@@ -20,7 +24,7 @@ From command line:
 
 Arguments:
 
-  -h, --help            show this help message and exit
+-  -h, --help            show this help message and exit
 
 - --outWidth [OUTWIDTH], -ow [OUTWIDTH]
                         Width in mm of the output image
