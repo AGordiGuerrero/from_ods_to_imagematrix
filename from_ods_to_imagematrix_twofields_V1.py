@@ -3,6 +3,8 @@
 # Extract contents from a Open Office sheet's columns and convert it to text in image arrays.
 # Can rescale the input image with command line arguments. 
 
+# It uses two columns to define name and surname of a person.
+
 # Created by A.Gordillo-Guerrero (anto@unex.es), September , 2023.
 # University of Extremadura. Smart Open Lab.
 # Released into the public domain.
@@ -91,7 +93,7 @@ my_dict = pyexcel.get_dict(file_name=args.datasheet, name_columns_by_row=0)
 # Some test...
 # Printing in the log file the readed lines
 for i in range (1, len(my_dict["Nombre"])):
-    logging.debug(my_dict["Nombre"][i])
+    logging.debug(my_dict["Nombre"][i], my_dict["Apellido"][i],  )
 
 
 
@@ -169,22 +171,36 @@ for i in range (len(my_dict["Nombre"])):
     #column identification
     icol= i // nImByRow
     # putting one base image in the correct location
-    canvas.paste( imBaseResized, ( int( ( baseRescaledWidth + offset )*irow ) , int( ( baseRescaledHeight +offset) *icol ) ) ) 
-    #putting the corresponding text in the center, depending on its size
-    draw = ImageDraw.Draw(canvas)
-    # obtaining this text size
-    textWidth, textHeight = draw.textsize(my_dict["Nombre"][i], font=TTfont)
-    thisTextCenterX=int((baseRescaledWidth  + offset)*irow+(baseRescaledWidth-textWidth)/2)
-    thisTextCenterY=int((baseRescaledHeight + offset)*icol+(baseRescaledHeight-textHeight)/2)
-    draw.text((thisTextCenterX, thisTextCenterY), my_dict["Nombre"][i], font=TTfont,fill=(0,0,0,255) ) #fill letters in black
+    canvas.paste( imBaseResized, ( int( ( baseRescaledWidth + offset )*irow ) , int( ( baseRescaledHeight +offset) *icol ) ) )
 
+    # Putting Name and Surname in the left botton area.
+    #   Name aligned left, surname aligned rigt
+
+    draw = ImageDraw.Draw(canvas)
+
+    # Putting in an imaginary rectangle of 2/3 by 2/3 of the size
+
+    # defining name position
+    nameCenterX=int((baseRescaledWidth  + offset)*irow+(baseRescaledWidth*0.06))
+    nameCenterY=int((baseRescaledHeight + offset)*icol+(baseRescaledHeight*0.48))
+    # Drawing name
+    draw.text((nameCenterX, nameCenterY), my_dict["Nombre"][i], font=TTfont,fill=(0,0,0,255) ) #fill letters in black
+
+    # defining surname position
+    textWidth, textHeight = draw.textsize(my_dict["Apellido"][i], font=TTfont)
+    surnameCenterX=int((baseRescaledWidth  + offset)*irow+(baseRescaledWidth*0.66-textWidth))
+    surnameCenterY=int((baseRescaledHeight + offset)*icol+(baseRescaledHeight*0.68))
+    # Drawing surname
+    draw.text((surnameCenterX, surnameCenterY), my_dict["Apellido"][i], font=TTfont,fill=(0,0,0,255) ) #fill letters in black
+
+    
 # saving to .png to retain transparent background
-canvas.save('labelarray_output.png')
+canvas.save('labelarray_output_twofields.png')
 
 # saving to .jpg
 canvas=canvas.convert('RGB')
 # saving the label created label array
-canvas.save('labelarray_output.jpg')
+canvas.save('labelarray_output_twofields.jpg')
 
 print("Array done, showing result after file save. Exiting...")
 logging.info("Array done, showing result after file save. Exiting...")
