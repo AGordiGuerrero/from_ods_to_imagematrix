@@ -50,9 +50,9 @@ Arguments:
 - --fontsize [FONTSIZE], -s [FONTSIZE]
                         Truetype font size (pt)
 
-Example:
+Example for Linux command line:
 
-`python3 ./from_ods_to_imagematrix_V5.py -ow 1000 -oh 800 -iw 43 -ih 43 -d datasheets/table_names_1.ods -i images/base_llavero_V0.1.png -f  fonts/Misyalli-dafont.ttf -s 24`
+`python3 ./from_ods_to_imagematrix_V6.py -ow 1000 -oh 800 -iw 43 -ih 43 -d datasheets/table_names_1.ods -i images/base_llavero_V0.1.png -f  fonts/Misyalli-dafont.ttf -s 24`
 
 Will generate an output image file with 1000x800mm, composed of a matrix of 43x43mm images with 24 point of letter size.
 
